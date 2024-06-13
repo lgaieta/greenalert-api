@@ -1,4 +1,4 @@
-class MySQLUserStorage {
+class MySQLUserRepository {
     static list() {
         /**
          * Usar la libreria mysql2 y hacer una consulta SELECT para listar los usuarios
@@ -14,4 +14,4 @@ class MySQLUserStorage {
     }
 }
 
-export default MySQLUserStorage;
+export default MySQLUserRepository;

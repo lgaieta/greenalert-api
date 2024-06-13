@@ -1,9 +1,10 @@
 import express from "express";
 import { UserRegisterRouter } from "./src/routes/UserRegisterRouter.js";
-const app = express();
-const port = 3500;
 
-app.use("/register", UserRegisterRouter);
+const app = express();
+const port = 5000;
+
+app.use(UserRegisterRouter);
 
 app.get("/", (request, response) => {
     response.send("Hello Home!");

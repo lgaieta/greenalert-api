@@ -1,12 +1,12 @@
-import NewUser from "../entities/NewUser";
+import NewUser from "../entities/NewUser.js";
 
-function registerUser({ user, userStorage }) {
+function registerUser({ user, userRepository }) {
     console.log("Registrando usuario (usecases)");
     const newUser = new NewUser(user);
     /* 
         Lógica de encriptación y validación de usuario no repetido 
     */
-    userStorage.save(newUser);
+    userRepository.save(newUser);
 }
 
 export default registerUser;

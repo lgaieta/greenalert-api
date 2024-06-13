@@ -1,4 +1,4 @@
-class PostgreSQLUserStorage {
+class PostgreSQLUserRepository {
     static list() {
         /**
          * Logica para listar usuarios en postgresql
@@ -16,4 +16,4 @@ class PostgreSQLUserStorage {
     }
 }
 
-export default PostgreSQLUserStorage;
+export default PostgreSQLUserRepository;

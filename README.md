@@ -8,3 +8,9 @@ La API de ClassManager es una REST API que gestiona la información de usuarios,
 -   **Problemas Ambientales**: Reportes de incidentes ambientales, incluyendo descripción, ubicación y estado del incidente.
 -   **Escuelas**: Detalles sobre las escuelas que están participando en el programa.
 -   **Clases**: Información básica para organizar a los profesores.
+
+## Documentación para desarrolladores
+
+[Arquitectura](./docs/arquitectura.md)
+
+[Entidades](./docs/entidades.md)

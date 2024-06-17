@@ -6,14 +6,13 @@ const UserRegisterRouter = express.Router();
 
 UserRegisterRouter.post("/register", (request, response) => {
     const { email, password } = request.body;
-    console.log("Peticion recibida en el servidor (routes)");
 
     registerUser({
         user: { email, password },
         userRepository: MySQLUserRepository,
     });
 
-    response.send("Asheee");
+    response.send("User created");
 });
 
 export { UserRegisterRouter };

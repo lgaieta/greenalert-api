@@ -3,10 +3,10 @@
     "name": "greenalert-api",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "index.cjs",
     "scripts": {
         "dev": "node --env-file=.env --watch index.js",
-        "start": "node index.js",
+        "start": "node --env-file=.env dist/index.cjs",
         "build": "esbuild index.js --bundle --outfile=dist/index.cjs --platform=node --target=node20.14 --minify"
     },
     "author": "",

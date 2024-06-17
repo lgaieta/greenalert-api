@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
 import { UserRegisterRouter } from "./src/routes/UserRegisterRouter.js";
+import { PORT } from "./src/config.js";
 
 const app = express();
-const port = 5000;
 
 app.use(cors());
 app.use(express.json());
@@ -13,6 +13,6 @@ app.get("/", (request, response) => {
     response.send("Hello world!");
 });
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
+app.listen(PORT, () => {
+    console.log(`Example app listening on port ${PORT}`);
 });

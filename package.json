@@ -5,8 +5,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "node --env-file=.env --watch index.js",
-        "start": "node --env-file=.env dist/index.cjs",
+        "dev": "node --watch index.js",
+        "start": "node dist/index.cjs",
         "build": "esbuild index.js --bundle --outfile=dist/index.cjs --platform=node --target=node20.14 --minify"
     },
     "author": "",

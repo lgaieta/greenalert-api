@@ -4,13 +4,18 @@ import MySQLUserRepository from "../services/MySQLUserRepository.js";
 
 const UserRouter = express.Router();
 
-UserRouter.post("/register", (request, response) => {
+UserRouter.post("/register", async (request, response) => {
     const { email, password } = request.body;
 
-    registerUser({
-        user: { email, password },
-        userRepository: MySQLUserRepository,
-    });
+    try {
+        await registerUser({
+            user: { email, password },
+            userRepository: MySQLUserRepository,
+        });
+    } catch (error) {
+        console.error(error);
+        response.status(400).send("Error");
+    }
 
     response.send("User created");
 });

@@ -1,14 +1,23 @@
-import NewUser from "../entities/NewUser.js";
+import User from "../entities/User.js";
 import "dotenv/config";
 
-async function registerUser({ user, userRepository }) {
-    const newUser = new NewUser(user);
-
-    const [dbUser] = await userRepository.getByEmail(newUser.email);
+async function registerUser({
+    userCredentials,
+    userRepository,
+    generateUsername,
+}) {
+    const [dbUser] = await userRepository.getByEmail(userCredentials.email);
 
     if (dbUser) throw new Error("User already exists");
 
-    userRepository.save(newUser);
+    const user = new User({
+        email: userCredentials.email,
+        password: userCredentials.password,
+        username: generateUsername(),
+        usertype: 0,
+    });
+
+    await userRepository.save(user);
 }
 
 export default registerUser;

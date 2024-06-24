@@ -1,6 +1,7 @@
 import express from "express";
 import registerUser from "../usecases/registerUser.js";
 import MySQLUserRepository from "../services/MySQLUserRepository.js";
+import { generateFromEmail } from "unique-username-generator";
 
 const UserRouter = express.Router();
 
@@ -9,8 +10,9 @@ UserRouter.post("/register", async (request, response) => {
 
     try {
         await registerUser({
-            user: { email, password },
+            userCredentials: { email, password },
             userRepository: MySQLUserRepository,
+            generateUsername: () => generateFromEmail(email, 4),
         });
     } catch (error) {
         console.error(error);

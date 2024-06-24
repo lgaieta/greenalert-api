@@ -12,7 +12,14 @@ class MySQLUserRepository {
         return result[0];
     }
 
-    static save() {}
+    static async save(user) {
+        const result = await pool.query(
+            "INSERT INTO user (email, password, username, usertype) VALUES (?, ?, ?, ?)",
+            [user.email, user.password, user.username, user.usertype],
+        );
+
+        return result[0];
+    }
 }
 
 export default MySQLUserRepository;

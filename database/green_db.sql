@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `green_db`.`course` (
     FOREIGN KEY (`school_CUE`)
     REFERENCES `green_db`.`school` (`CUE`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -61,12 +61,12 @@ CREATE TABLE IF NOT EXISTS `green_db`.`report` (
     FOREIGN KEY (`course_id` , `course_school_CUE`)
     REFERENCES `green_db`.`course` (`id` , `school_CUE`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_report_user1`
     FOREIGN KEY (`user_email`)
     REFERENCES `green_db`.`user` (`email`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 

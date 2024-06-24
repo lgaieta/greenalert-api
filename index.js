@@ -1,11 +1,19 @@
-const express = require('express')
-const app = express()
-const port = 3000
+import express from "express";
+import cors from "cors";
+import { UserRouter } from "./src/routes/UserRouter.js";
+import { PORT } from "./src/config.js";
+import "dotenv/config";
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+const app = express();
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+app.use(cors());
+app.use(express.json());
+app.use("/user", UserRouter);
+
+app.get("/", (request, response) => {
+    response.send("Hello world!");
+});
+
+app.listen(PORT, () => {
+    console.log(`Example app listening on port ${PORT}`);
+});

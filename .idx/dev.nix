@@ -8,7 +8,7 @@
     pkgs.nodejs_20
   ];
   # Sets environment variables in the workspace
-  env = {};
+  env = { };
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
@@ -23,10 +23,10 @@
     };
     # Enable previews and customize configuration
     previews = {
-      enable = true;
+      enable = false;
       previews = {
         web = {
-          command = ["npm" "run" "dev" "--" "--port" "$PORT"];
+          command = [ "npm" "run" "dev" ];
           manager = "web";
         };
       };

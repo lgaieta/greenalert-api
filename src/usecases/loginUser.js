@@ -1,18 +1,16 @@
-
- async function loginUser ({
+async function loginUser({
     userCredentials,
     userRepository,
-    userPassword,}){
-        
-    const [dbEmail] = await userRepository.getByEmail(userCredentials.email);
-    if (!dbEmail) throw new Error("User does not exist");
+    passwordEncrypter,
+}) {
+    const [dbUser] = await userRepository.getByEmail(userCredentials.email);
+    if (!dbUser) throw new Error("User does not exist");
 
-    const hashedPassword = await userPassword.encrypt(
+    const isValid = await passwordEncrypter.compare(
         userCredentials.password,
+        dbUser.password,
     );
-    const isValid = await bcrypt.compare(userCredentials.password, hashedPassword);
-    if(!isValid) throw new Error('password is invalid')
-    
-        
+
+    if (!isValid) throw new Error("Password is invalid");
 }
 export default loginUser;

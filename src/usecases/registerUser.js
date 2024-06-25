@@ -1,5 +1,6 @@
-import User from "../entities/User.js";
-import "dotenv/config";
+import User from "../entities/User.js"
+import "dotenv/config"
+import mysql from 'mysql2/promise';
 
 async function registerUser({
     userCredentials,

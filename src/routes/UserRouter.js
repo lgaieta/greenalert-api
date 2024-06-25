@@ -1,5 +1,6 @@
 import express from "express";
 import registerUser from "../usecases/registerUser.js";
+import loginUser from "../usecases/loginUser.js";
 import MySQLUserRepository from "../services/MySQLUserRepository.js";
 import { generateFromEmail } from "unique-username-generator";
 import PasswordEncrypter from "../services/PasswordEncrypter.js";
@@ -21,7 +22,22 @@ UserRouter.post("/register", async (request, response) => {
         response.status(400).send("Error");
     }
 
-    response.send("User created");
 });
 
+UserRouter.post('/login',async (request,response) =>{
+    const {email, password} = request.body;
+    try{
+    await loginUser({
+        userCredentials: {email, password},
+        userRepository: MySQLUserRepository,
+        passwordEncrypter: PasswordEncrypter,
+    })
+    }catch(error){
+        console.error(error);
+        response.status(400).send("Error");
+    }
+
+})
+
 export { UserRouter };
+

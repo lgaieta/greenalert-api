@@ -2,6 +2,7 @@ import express from "express";
 import registerUser from "../usecases/registerUser.js";
 import MySQLUserRepository from "../services/MySQLUserRepository.js";
 import { generateFromEmail } from "unique-username-generator";
+import PasswordEncrypter from "../services/PasswordEncrypter.js";
 
 const UserRouter = express.Router();
 
@@ -13,6 +14,7 @@ UserRouter.post("/register", async (request, response) => {
             userCredentials: { email, password },
             userRepository: MySQLUserRepository,
             generateUsername: () => generateFromEmail(email, 4),
+            passwordEncrypter: PasswordEncrypter,
         });
     } catch (error) {
         console.error(error);

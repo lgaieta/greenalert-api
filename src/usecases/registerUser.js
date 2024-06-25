@@ -5,14 +5,19 @@ async function registerUser({
     userCredentials,
     userRepository,
     generateUsername,
+    passwordEncrypter,
 }) {
     const [dbUser] = await userRepository.getByEmail(userCredentials.email);
 
     if (dbUser) throw new Error("User already exists");
 
+    const hashedPassword = await passwordEncrypter.encrypt(
+        userCredentials.password,
+    );
+
     const user = new User({
         email: userCredentials.email,
-        password: userCredentials.password,
+        password: hashedPassword,
         username: generateUsername(),
         usertype: 0,
     });

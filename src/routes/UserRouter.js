@@ -12,6 +12,8 @@ const UserRouter = express.Router();
 UserRouter.post("/register", async (request, response) => {
     const { email, password } = request.body;
 
+    if (!email || !password) return response.status(400).send("Error");
+
     try {
         await registerUser({
             userCredentials: { email, password },
@@ -19,10 +21,8 @@ UserRouter.post("/register", async (request, response) => {
             generateUsername: () => generateUsername("-", 2, 15),
             passwordEncrypter: PasswordEncrypter,
         });
-        const token = jwt.registerUser({ email, password }, SECRET_JWT_KEY, {
-            expiresIn: "1h",
-        });
-        return response.send({ token });
+
+        return response.send("User registered successfully");
     } catch (error) {
         console.error(error);
         return response.status(400).send("Error");
@@ -31,17 +31,29 @@ UserRouter.post("/register", async (request, response) => {
 
 UserRouter.post("/login", async (request, response) => {
     const { email, password } = request.body;
+
+    if (!email || !password) return response.status(400).send("Error");
+
     try {
         await loginUser({
             userCredentials: { email, password },
             userRepository: MySQLUserRepository,
             passwordEncrypter: PasswordEncrypter,
         });
+
+        const token = jwt.sign({ email }, SECRET_JWT_KEY, {
+            expiresIn: "1h",
+        });
+
+        return response
+            .cookie("access_token", token, {
+                secure: process.env.NODE_ENV === "production",
+            })
+            .send("Logged in successfully");
     } catch (error) {
         console.error(error);
         return response.status(400).send("Log in failed");
     }
-    response.send("Logged in successfully");
 });
 
 export { UserRouter };

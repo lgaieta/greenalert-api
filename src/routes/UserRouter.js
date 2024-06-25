@@ -9,6 +9,16 @@ import { SECRET_JWT_KEY } from "../config.js";
 
 const UserRouter = express.Router();
 
+UserRouter.get("/", async (request, response) => {
+    const token = request.cookies.access_token;
+
+    if (!token) return response.status(403).send("Unauthorized access");
+
+    console.log(token);
+
+    response.send("Protected users!");
+});
+
 UserRouter.post("/register", async (request, response) => {
     const { email, password } = request.body;
 

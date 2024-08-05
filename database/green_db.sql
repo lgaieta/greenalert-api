@@ -54,6 +54,8 @@ CREATE TABLE IF NOT EXISTS `green_db`.`report` (
   `course_id` INT NOT NULL,
   `course_school_CUE` INT NOT NULL,
   `user_email` VARCHAR(255) NOT NULL,
+  `latitude` VARCHAR(255) NOT NULL,
+  `longitude` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`idreport`, `course_id`, `course_school_CUE`, `user_email`),
   INDEX `fk_report_course1_idx` (`course_id` ASC, `course_school_CUE` ASC) VISIBLE,
   INDEX `fk_report_user1_idx` (`user_email` ASC) VISIBLE,

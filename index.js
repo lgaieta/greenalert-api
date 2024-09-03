@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { UserRouter } from "./src/routes/UserRouter.js";
+import { ReportRouter } from "./src/routes/ReportRouter.js";
 import { PORT } from "./src/config.js";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
@@ -13,9 +14,10 @@ app.use(morgan("tiny"));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/user", UserRouter);
+app.use("/report", ReportRouter);
 
 app.get("/", (request, response) => {
-    response.send("Hello world!");
+    response.send("Prueba n1");
 });
 
 app.listen(PORT, () => {

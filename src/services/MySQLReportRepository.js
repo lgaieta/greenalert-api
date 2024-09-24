@@ -6,7 +6,6 @@ class MySQLReportRepository {
             "INSERT INTO report (desc_report, latitude, length) VALUES (?, ?, ?)",
             [report.description, report.lat, report.lng],
         );
-
         return result[0];
     }
 }

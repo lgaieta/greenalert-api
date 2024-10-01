@@ -1,6 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import registerUser from "../usecases/registerUser.js";
+import registerDirector from "../usecases/registerDirector.js";
 import loginUser from "../usecases/loginUser.js";
 import MySQLUserRepository from "../services/MySQLUserRepository.js";
 import { generateUsername } from "unique-username-generator";
@@ -76,8 +77,7 @@ UserRouter.post("/director/register", async (request, response) => {
             userRepository: MySQLUserRepository,
         });
 
-        return response
-            .send("Logged in successfully");
+        return response.send("Logged in successfully");
     } catch (error) {
         console.error(error);
         return response.status(400).send("Log in failed");

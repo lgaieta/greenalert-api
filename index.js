@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/user", UserRouter);
 app.use("/report", ReportRouter);
-app.use("/school", SchoolRouter)
+app.use("/school", SchoolRouter);
 
 app.get("/", (request, response) => {
     response.send("Prueba n1");

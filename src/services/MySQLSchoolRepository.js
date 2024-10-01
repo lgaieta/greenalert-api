@@ -1,7 +1,12 @@
 import { pool } from "./pool.js";
 
-class MySQLSchoolRepository {
-    static list() {}
+class MySQLSchoolRepository{
+    static async list() {
+        const result = await pool.query(
+            "SELECT * FROM school"
+        )
+        return result[0]
+    }
 
     static async getByCue(cue) {
         const result = await pool.query(

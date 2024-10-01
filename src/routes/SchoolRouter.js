@@ -23,4 +23,15 @@ SchoolRouter.post("/", async (request, response) => {
     }
 });
 
-export { SchoolRouter };
+SchoolRouter.get("/", async (request, response) => {
+    try {
+        schoolList = await MySQLSchoolRepository.list();
+        return response.json(schoolList)
+    }    
+    catch(error){
+        console.log(error)
+        return response.status(400).send("Error");
+    }
+})
+
+export { SchoolRouter }

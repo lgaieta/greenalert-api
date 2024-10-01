@@ -1,6 +1,7 @@
 class School {
-    constructor({cue,locality}){
+    constructor({cue,name,locality}){
         this.cue = cue;
+        this.name = name;
         this.locality = locality;
     }
 }

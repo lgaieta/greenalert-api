@@ -10,12 +10,12 @@ SchoolRouter.get("/", async (request, response) => {
 });
 
 SchoolRouter.post("/", async (request, response) => {
-    const { cue, locality } = request.body;
+    const { cue, name, locality } = request.body;
 
-    if (!cue || !locality) return response.status(403).send("Error");
+    if (!cue || !name || !locality) return response.status(403).send("Error");
 
     try {
-        await MySQLSchoolRepository.save({ cue, locality });
+        await MySQLSchoolRepository.save({ cue, name, locality });
         return response.status(200).send("Created successfully!");
     } catch (error) {
         console.log(error);

@@ -65,5 +65,23 @@ UserRouter.post("/login", async (request, response) => {
         return response.status(400).send("Log in failed");
     }
 });
+UserRouter.post("/director/register", async (request, response) => {
+    const { email } = request.body;
+
+    if (!email) return response.status(400).send("Error");
+
+    try {
+        await registerDirector({
+            email,
+            userRepository: MySQLUserRepository,
+        });
+
+        return response
+            .send("Logged in successfully");
+    } catch (error) {
+        console.error(error);
+        return response.status(400).send("Log in failed");
+    }
+});
 
 export { UserRouter };

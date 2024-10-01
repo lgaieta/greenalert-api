@@ -20,6 +20,14 @@ class MySQLUserRepository {
 
         return result[0];
     }
+     static async registerDirector(email) {
+        const result = await pool.query(
+            "UPDATE user SET usertype = ? WHERE email = ?",
+            [1, email],
+        );
+
+        return result[0];
+    }
 }
 
 export default MySQLUserRepository;

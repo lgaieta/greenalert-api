@@ -10,7 +10,7 @@ SchoolRouter.get("/", async(request, response) => {
     console.log(token);
 })
 
-SchoolRouter.post("/crear-escuela", async (request, response) => {
+SchoolRouter.post("/", async (request, response) => {
     const {cue, locality} = request.body;   
     if (!cue || !locality) return response.status(403).send("Error")
     try{

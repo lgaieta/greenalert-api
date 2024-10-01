@@ -6,7 +6,7 @@ import loginUser from "../usecases/loginUser.js";
 import MySQLUserRepository from "../services/MySQLUserRepository.js";
 import { generateUsername } from "unique-username-generator";
 import PasswordEncrypter from "../services/PasswordEncrypter.js";
-import { SECRET_JWT_KEY } from "../config.js";
+import { SECRET_JWT_KEY, ADMIN_EMAIL, ADMIN_PASSWORD } from "../config.js";
 
 const UserRouter = express.Router();
 
@@ -44,6 +44,19 @@ UserRouter.post("/login", async (request, response) => {
     const { email, password } = request.body;
 
     if (!email || !password) return response.status(400).send("Error");
+
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+        const token = jwt.sign({ email, usertype: "admin" }, SECRET_JWT_KEY, {
+            expiresIn: "1h",
+        });
+
+        return response
+            .cookie("access_token", token, {
+                secure: process.env.NODE_ENV === "production",
+            })
+
+            .send("Logged in successfully");
+    }
 
     try {
         await loginUser({

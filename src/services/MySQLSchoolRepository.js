@@ -18,8 +18,8 @@ class MySQLSchoolRepository{
     static async save(school) {
         console.log("Laburando en la bd de escuela");
         const result = await pool.query(
-            "INSERT INTO school (cue,locality) VALUES (?, ?)",
-            [school.cue, school.locality],
+            "INSERT INTO school (cue,name_school,locality) VALUES (?,?,?)",
+            [school.cue,school.name, school.locality],
         );
 
         return result[0];

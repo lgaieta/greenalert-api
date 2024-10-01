@@ -28,6 +28,7 @@ class MySQLUserRepository {
 
         return result[0];
     }
+   
 }
 
 export default MySQLUserRepository;

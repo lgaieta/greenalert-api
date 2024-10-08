@@ -1,8 +1,13 @@
 import { pool } from "./pool.js";
 
 class MySQLUserRepository {
-    static list() {}
+    static async listDirectors() {
+        const result = await pool.query(
+            "SELECT email FROM user WHERE usertype = 1",
+        );
 
+        return result[0];
+    }
     static async getByEmail(email) {
         const result = await pool.query(
             "SELECT email, password FROM user WHERE email = ?",
@@ -20,7 +25,7 @@ class MySQLUserRepository {
 
         return result[0];
     }
-     static async registerDirector(email) {
+    static async registerDirector(email) {
         const result = await pool.query(
             "UPDATE user SET usertype = ? WHERE email = ?",
             [1, email],

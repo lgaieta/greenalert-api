@@ -20,6 +20,16 @@ UserRouter.get("/", async (request, response) => {
     response.send("Protected users!");
 });
 
+UserRouter.get("/director", async (request, response) => {
+    try {
+        const directorList = await MySQLUserRepository.listDirectors();
+        return response.json(directorList);
+    } catch (error) {
+        console.log(error);
+        return response.status(400).send("Error");
+    }
+});
+
 UserRouter.post("/register", async (request, response) => {
     const { email, password } = request.body;
 

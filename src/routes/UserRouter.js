@@ -55,7 +55,8 @@ UserRouter.get("/validate", async (request, response) => {
     if (!token) return response.status(403).send("Unauthorized access");
 
     try {
-        const payload = SessionManager.verifyToken(token);
+        const payload = await SessionManager.verifyToken(token);
+
         return response.json({
             email: payload.email,
             usertype: payload.usertype,

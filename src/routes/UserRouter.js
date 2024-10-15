@@ -50,21 +50,42 @@ UserRouter.post("/register", async (request, response) => {
     }
 });
 
+UserRouter.get("/validate", async (request, response) => {
+    const token = request.cookies.access_token;
+
+    if (!token) return response.status(403).send("Unauthorized access");
+
+    try {
+        const payload = jwt.verify(token, SECRET_JWT_KEY);
+        return response.json({
+            email: payload.email,
+            usertype: payload.usertype,
+        });
+    } catch (error) {
+        console.error(error);
+        return response.status(400).send("Error");
+    }
+});
+
 UserRouter.post("/login", async (request, response) => {
     const { email, password } = request.body;
 
     if (!email || !password) return response.status(400).send("Error");
 
     try {
-        await loginUser({
+        const user = await loginUser({
             userCredentials: { email, password },
             userRepository: MySQLUserRepository,
             passwordEncrypter: PasswordEncrypter,
         });
 
-        const token = jwt.sign({ email }, SECRET_JWT_KEY, {
-            expiresIn: "1h",
-        });
+        const token = jwt.sign(
+            { email, usertype: user.usertype },
+            SECRET_JWT_KEY,
+            {
+                expiresIn: "7d",
+            },
+        );
 
         return response
             .cookie("access_token", token, {
@@ -76,6 +97,7 @@ UserRouter.post("/login", async (request, response) => {
         return response.status(400).send("Log in failed");
     }
 });
+
 UserRouter.post("/director/register", async (request, response) => {
     const { email } = request.body;
 

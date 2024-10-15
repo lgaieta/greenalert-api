@@ -3,7 +3,7 @@ async function loginUser({
     userRepository,
     passwordEncrypter,
 }) {
-    const [dbUser] = await userRepository.getByEmail(userCredentials.email);
+    const dbUser = await userRepository.getByEmail(userCredentials.email);
     if (!dbUser) throw new Error("User does not exist");
 
     const isValid = await passwordEncrypter.compare(
@@ -12,5 +12,7 @@ async function loginUser({
     );
 
     if (!isValid) throw new Error("Password is invalid");
+
+    return dbUser;
 }
 export default loginUser;

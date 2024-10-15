@@ -1,9 +1,6 @@
 import "dotenv/config";
 
-async function registerDirector({
-    email,
-    userRepository,
-}) {
+async function registerDirector({ email, userRepository }) {
     const [dbDirector] = await userRepository.getByEmail(email);
 
     if (!dbDirector) throw new Error("User does not exist");
@@ -12,4 +9,3 @@ async function registerDirector({
 }
 
 export default registerDirector;
-                    

@@ -106,10 +106,10 @@ UserRouter.post("/director/register", async (request, response) => {
             userRepository: MySQLUserRepository,
         });
 
-        return response.send("Logged in successfully");
+        return response.status(200).send("Registered successfully");
     } catch (error) {
         console.error(error);
-        return response.status(400).send("Log in failed");
+        return response.status(400).send("Register failed");
     }
 });
 

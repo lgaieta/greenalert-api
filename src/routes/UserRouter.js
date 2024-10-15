@@ -1,12 +1,11 @@
 import express from "express";
-import jwt from "jsonwebtoken";
 import registerUser from "../usecases/registerUser.js";
 import registerDirector from "../usecases/registerDirector.js";
 import loginUser from "../usecases/loginUser.js";
 import MySQLUserRepository from "../services/MySQLUserRepository.js";
 import { generateUsername } from "unique-username-generator";
 import PasswordEncrypter from "../services/PasswordEncrypter.js";
-import { SECRET_JWT_KEY } from "../config.js";
+import SessionManager from "../services/SessionManager.js";
 
 const UserRouter = express.Router();
 
@@ -56,7 +55,7 @@ UserRouter.get("/validate", async (request, response) => {
     if (!token) return response.status(403).send("Unauthorized access");
 
     try {
-        const payload = jwt.verify(token, SECRET_JWT_KEY);
+        const payload = SessionManager.verifyToken(token);
         return response.json({
             email: payload.email,
             usertype: payload.usertype,
@@ -79,16 +78,14 @@ UserRouter.post("/login", async (request, response) => {
             passwordEncrypter: PasswordEncrypter,
         });
 
-        const token = jwt.sign(
-            { email, usertype: user.usertype },
-            SECRET_JWT_KEY,
-            {
-                expiresIn: "7d",
-            },
-        );
+        const token = SessionManager.generateToken({
+            email,
+            usertype: user.usertype,
+        });
 
         return response
             .cookie("access_token", token, {
+                httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
             })
             .send("Logged in successfully");

@@ -72,6 +72,19 @@ UserRouter.post("/login", async (request, response) => {
 
     if (!email || !password) return response.status(400).send("Error");
 
+    // if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+    //     const token = jwt.sign({ email, usertype: "admin" }, SECRET_JWT_KEY, {
+    //         expiresIn: "1h",
+    //     });
+
+    //     return response
+    //         .cookie("access_token", token, {
+    //             secure: process.env.NODE_ENV === "production",
+    //         })
+
+    //         .send("Logged in successfully");
+    // }
+
     try {
         const user = await loginUser({
             userCredentials: { email, password },

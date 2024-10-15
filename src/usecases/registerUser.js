@@ -7,7 +7,7 @@ async function registerUser({
     generateUsername,
     passwordEncrypter,
 }) {
-    const [dbUser] = await userRepository.getByEmail(userCredentials.email);
+    const dbUser = await userRepository.getByEmail(userCredentials.email);
 
     if (dbUser) throw new Error("User already exists");
 
@@ -19,7 +19,7 @@ async function registerUser({
         email: userCredentials.email,
         password: hashedPassword,
         username: generateUsername(),
-        usertype: 0,
+        usertype: "student",
     });
 
     await userRepository.save(user);

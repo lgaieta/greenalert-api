@@ -46,4 +46,15 @@ ReportRouter.get("/", async (request, response) => {
     }
 });
 
+ReportRouter.get("/unit/:id", async (request, response) => {
+    const { id } = request.params;
+    try {
+        const report = await MySQLReportRepository.get(id);
+        return response.json(report);
+    } catch (error) {
+        console.log(error);
+        return response.status(400).send("Error");
+    }
+});
+
 export { ReportRouter };

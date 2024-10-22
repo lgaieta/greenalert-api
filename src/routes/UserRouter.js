@@ -93,7 +93,7 @@ UserRouter.post("/login", async (request, response) => {
             passwordEncrypter: PasswordEncrypter,
         });
 
-        const token = SessionManager.generateToken({
+        const token = await SessionManager.generateToken({
             email,
             usertype: user.usertype,
         });

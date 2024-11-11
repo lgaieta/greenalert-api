@@ -20,21 +20,24 @@ class MySQLReportRepository {
     static async list() {
         const [result] = await pool.query(
             `
-                SELECT report.*, locality.locality_name, report_type.name as report_type_name, school.name_school FROM report 
+                SELECT report.*, course.course as course_name, locality.locality_name, report_type.name as report_type_name, school.name_school FROM report 
                 LEFT JOIN locality ON report.locality = locality.idlocality
                 LEFT JOIN report_type ON report.type_report = report_type.id
                 LEFT JOIN course ON report.course_id = course.id
                 LEFT JOIN school ON course.school_CUE = school.cue;
-                `,
+            `,
         );
 
         return result.map((row) => ({
             id: row.idreport,
             email: row.user_email,
-            type: row.report_type_name,
+            type: row.type_report,
+            typeName: row.report_type_name,
             courseId: row.course_id,
-            school: row.name_school,
-            locality: row.locality_name,
+            courseName: row.course_name,
+            schoolName: row.name_school,
+            locality: row.locality,
+            localityName: row.locality_name,
             description: row.desc_report,
             lat: row.latitude,
             lng: row.length,

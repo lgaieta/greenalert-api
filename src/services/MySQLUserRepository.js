@@ -11,7 +11,7 @@ const dbUsertypesMap = ["student", "professor", "director"];
 class MySQLUserRepository {
     static async listDirectors() {
         const result = await pool.query(
-            "SELECT email FROM user WHERE usertype = 1",
+            "SELECT email FROM user WHERE usertype = 2",
         );
 
         return result[0];

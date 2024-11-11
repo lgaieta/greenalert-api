@@ -21,9 +21,33 @@ UserRouter.get("/", async (request, response) => {
 });
 
 UserRouter.get("/director", async (request, response) => {
+    const token = request.cookies.access_token;
+
+    if (!token) return response.status(403).send("Unauthorized access");
+
     try {
+        const payload = await SessionManager.verifyToken(token);
+        if (payload.usertype !== "admin")
+            return response.status(403).send("Unauthorized access");
         const directorList = await MySQLUserRepository.listDirectors();
         return response.json(directorList);
+    } catch (error) {
+        console.log(error);
+        return response.status(400).send("Error");
+    }
+});
+
+UserRouter.get("/professor", async (request, response) => {
+    const token = request.cookies.access_token;
+
+    if (!token) return response.status(403).send("Unauthorized access");
+
+    try {
+        const payload = await SessionManager.verifyToken(token);
+        if (payload.usertype !== "director")
+            return response.status(403).send("Unauthorized access");
+        const professorList = await MySQLUserRepository.listProfessors();
+        return response.json(professorList);
     } catch (error) {
         console.log(error);
         return response.status(400).send("Error");

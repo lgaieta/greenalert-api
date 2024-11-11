@@ -16,6 +16,15 @@ class MySQLUserRepository {
 
         return result[0];
     }
+
+    static async listProfessors() {
+        const result = await pool.query(
+            "SELECT email FROM user WHERE usertype = 1",
+        );
+
+        return result[0];
+    }
+
     static async getByEmail(email) {
         const [result] = await pool.query(
             "SELECT email, password, usertype FROM user WHERE email = ?",

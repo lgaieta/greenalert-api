@@ -21,6 +21,8 @@ UserRouter.post("/register", registerHandler);
 // Director Routes
 UserRouter.get("/director", getDirectorsHandler);
 UserRouter.post("/director/register", registerDirectorHandler);
+UserRouter.get("/director/school/:cue", getDirectorByCueHandler);
+UserRouter.post("/director/school", setSchoolDirectorHandler);
 
 // Professor Routes
 UserRouter.get("/professor", getProfessorsHandler);
@@ -120,6 +122,17 @@ async function getDirectorsHandler(request, response) {
     }
 }
 
+async function getDirectorByCueHandler(request, response) {
+    try {
+        const { cue } = request.params;
+        const director = await MySQLUserRepository.getDirectorByCue(cue);
+        return response.json(director);
+    } catch (error) {
+        console.log(error);
+        return response.status(400).send("Error");
+    }
+}
+
 async function registerDirectorHandler(request, response) {
     try {
         const token = request.cookies.access_token;
@@ -136,6 +149,27 @@ async function registerDirectorHandler(request, response) {
             email,
             userRepository: MySQLUserRepository,
         });
+
+        return response.status(200).send("Registered successfully");
+    } catch (error) {
+        console.error(error);
+        return response.status(400).send("Register failed");
+    }
+}
+
+async function setSchoolDirectorHandler(request, response) {
+    try {
+        const token = request.cookies.access_token;
+        if (!token) return response.status(403).send("Unauthorized access");
+
+        const payload = await SessionManager.verifyToken(token);
+        if (payload.usertype !== "admin")
+            return response.status(403).send("Unauthorized access");
+
+        const { cue, email } = request.body;
+        if (!cue || !email) return response.status(400).send("Error");
+
+        await MySQLUserRepository.setSchoolDirector(cue, email);
 
         return response.status(200).send("Registered successfully");
     } catch (error) {

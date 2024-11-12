@@ -77,6 +77,24 @@ class MySQLUserRepository {
             usertype: dbUsertypesMap[dbUser.usertype],
         };
     }
+
+    static async getDirectorByCue(cue) {
+        const [result] = await pool.query(
+            "SELECT user.* FROM school JOIN user ON school.CUE = ? WHERE usertype = ? AND user.email = school.director_email",
+            [cue, usertypesMap["director"]],
+        );
+
+        return result[0];
+    }
+
+    static async setSchoolDirector(cue, email) {
+        const result = await pool.query(
+            "UPDATE school SET director_email = ? WHERE CUE = ?",
+            [email, cue],
+        );
+
+        return result[0];
+    }
 }
 
 export default MySQLUserRepository;

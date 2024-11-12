@@ -4,23 +4,31 @@ class MySQLSchoolRepository {
     static async list() {
         const result = await pool.query("SELECT * FROM school");
         return result[0].map((row) => ({
-            cue: row.cue,
+            cue: row.CUE,
             name: row.name_school,
             locality: row.locality,
         }));
     }
 
     static async getByCue(cue) {
-        const result = await pool.query(
-            "SELECT cue FROM school WHERE cue = ?",
+        const [result] = await pool.query(
+            "SELECT * FROM school WHERE CUE = ?",
             [cue],
         );
-        return result[0];
+
+        const found = result[0];
+
+        if (!found) return null;
+
+        return {
+            cue: found.CUE,
+            name: found.name_school,
+            locality: found.locality,
+        };
     }
     static async save(school) {
-        console.log("Laburando en la bd de escuela");
         const result = await pool.query(
-            "INSERT INTO school (cue,name_school,locality) VALUES (?,?,?)",
+            "INSERT INTO school (CUE,name_school,locality) VALUES (?,?,?)",
             [school.cue, school.name, school.locality],
         );
 

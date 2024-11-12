@@ -7,15 +7,15 @@ const { JsonWebTokenError } = jwt;
 const SchoolRouter = express.Router();
 
 SchoolRouter.post("/", async (request, response) => {
-    const { cue, name, locality } = request.body;
-    if (!cue || !name || !locality) return response.status(400).send("Error");
-    const { access_token } = request.cookies;
-
     try {
+        const { cue, name, locality } = request.body;
+        if (!cue || !name || !locality)
+            return response.status(400).send("Error");
+        const { access_token } = request.cookies;
+        if (!access_token) return response.status(403).send("Unauthorized");
         const { usertype } = await SessionManager.verifyToken(
             access_token || "",
         );
-
         if (usertype !== "admin")
             return response.status(403).send("Unauthorized");
 
@@ -31,8 +31,36 @@ SchoolRouter.post("/", async (request, response) => {
 
 SchoolRouter.get("/", async (request, response) => {
     try {
+        const { access_token } = request.cookies;
+        if (!access_token) return response.status(403).send("Unauthorized");
+        const { usertype } = await SessionManager.verifyToken(
+            access_token || "",
+        );
+        if (usertype !== "admin")
+            return response.status(403).send("Unauthorized");
+
         const schoolList = await MySQLSchoolRepository.list();
         return response.json(schoolList);
+    } catch (error) {
+        console.log(error);
+        return response.status(400).send("Error");
+    }
+});
+
+SchoolRouter.get("/cue/:cue", async (request, response) => {
+    try {
+        const { access_token } = request.cookies;
+        if (!access_token) return response.status(403).send("Unauthorized");
+        const { usertype } = await SessionManager.verifyToken(
+            access_token || "",
+        );
+        if (usertype !== "admin")
+            return response.status(403).send("Unauthorized");
+
+        const { cue } = request.params;
+        const school = await MySQLSchoolRepository.getByCue(cue);
+        console.log(school);
+        return response.json(school);
     } catch (error) {
         console.log(error);
         return response.status(400).send("Error");

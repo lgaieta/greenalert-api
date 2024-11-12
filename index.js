@@ -8,6 +8,7 @@ import { PORT } from "./src/config.js";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
+import { CourseRouter } from "./src/routes/CourseRouter.js";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(cookieParser());
 app.use("/user", UserRouter);
 app.use("/report", ReportRouter);
 app.use("/school", SchoolRouter);
+app.use("/course", CourseRouter);
 
 app.get("/", (request, response) => {
     response.send("Prueba n1");

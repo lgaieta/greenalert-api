@@ -167,6 +167,7 @@ async function setSchoolDirectorHandler(request, response) {
             return response.status(403).send("Unauthorized access");
 
         const { cue, email } = request.body;
+        console.log(cue, email);
         if (!cue || !email) return response.status(400).send("Error");
 
         await MySQLUserRepository.setSchoolDirector(cue, email);

@@ -1,6 +1,7 @@
 import express from "express";
 import registerUser from "../usecases/registerUser.js";
 import registerDirector from "../usecases/registerDirector.js";
+import registerProfessor from "../usecases/registerProfessor.js";
 import loginUser from "../usecases/loginUser.js";
 import MySQLUserRepository from "../services/MySQLUserRepository.js";
 import { generateUsername } from "unique-username-generator";
@@ -51,6 +52,31 @@ UserRouter.get("/professor", async (request, response) => {
     } catch (error) {
         console.log(error);
         return response.status(400).send("Error");
+    }
+});
+
+UserRouter.post("/professor/register", async (request, response) => {
+    try {
+        const token = request.cookies.access_token;
+
+        if (!token) return response.status(403).send("Unauthorized access");
+        const payload = await SessionManager.verifyToken(token);
+
+        if (payload.usertype !== "director")
+            return response.status(403).send("Unauthorized access");
+
+        const { email } = request.body;
+
+        if (!email) return response.status(400).send("Error");
+        await registerProfessor({
+            email,
+            userRepository: MySQLUserRepository,
+        });
+
+        return response.status(200).send("Registered successfully");
+    } catch (error) {
+        console.error(error);
+        return response.status(400).send("Register failed");
     }
 });
 
@@ -135,11 +161,19 @@ UserRouter.post("/login", async (request, response) => {
 });
 
 UserRouter.post("/director/register", async (request, response) => {
-    const { email } = request.body;
-
-    if (!email) return response.status(400).send("Error");
-
     try {
+        const token = request.cookies.access_token;
+
+        if (!token) return response.status(403).send("Unauthorized access");
+        const payload = await SessionManager.verifyToken(token);
+
+        if (payload.usertype !== "admin")
+            return response.status(403).send("Unauthorized access");
+
+        const { email } = request.body;
+
+        if (!email) return response.status(400).send("Error");
+
         await registerDirector({
             email,
             userRepository: MySQLUserRepository,

@@ -11,7 +11,8 @@ const dbUsertypesMap = ["student", "professor", "director"];
 class MySQLUserRepository {
     static async listDirectors() {
         const result = await pool.query(
-            "SELECT email FROM user WHERE usertype = 2",
+            "SELECT email FROM user WHERE usertype = ?",
+            [usertypesMap["director"]],
         );
 
         return result[0];
@@ -19,7 +20,8 @@ class MySQLUserRepository {
 
     static async listProfessors() {
         const result = await pool.query(
-            "SELECT email FROM user WHERE usertype = 1",
+            "SELECT email FROM user WHERE usertype = ?",
+            [usertypesMap["professor"]],
         );
 
         return result[0];
@@ -55,6 +57,15 @@ class MySQLUserRepository {
         const result = await pool.query(
             "UPDATE user SET usertype = ? WHERE email = ?",
             [usertypesMap["director"], email],
+        );
+
+        return result[0];
+    }
+
+    static async registerProfessor(email) {
+        const result = await pool.query(
+            "UPDATE user SET usertype = ? WHERE email = ?",
+            [usertypesMap["professor"], email],
         );
 
         return result[0];

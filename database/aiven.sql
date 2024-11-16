@@ -208,6 +208,15 @@ ALTER TABLE school
 ADD CONSTRAINT director_school_fk
 FOREIGN KEY (director_email) REFERENCES user(email);
 
+DROP TABLE IF EXISTS `teacher_school`;
+CREATE TABLE teacher_school (
+    teacher_email VARCHAR(255),
+    school_cue VARCHAR(15),
+    PRIMARY KEY (teacher_email, school_cue),
+    FOREIGN KEY (teacher_email) REFERENCES user(email) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (school_cue) REFERENCES school(CUE) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;

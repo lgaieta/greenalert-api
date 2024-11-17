@@ -42,7 +42,6 @@ class AuthenticationRequestsHandler {
                     usertype: user.usertype,
                     schoolCue: school.cue,
                 });
-                console.log(school);
             } else if (user.usertype === "professor") {
                 const school =
                     await MySQLSchoolRepository.getByProfessorEmail(email);

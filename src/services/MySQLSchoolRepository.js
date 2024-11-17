@@ -35,7 +35,7 @@ class MySQLSchoolRepository {
             `,
             [email],
         );
-        return rows.map(MySQLSchoolRepository.adaptSchool);
+        return rows.map(MySQLSchoolRepository.adaptSchool)[0];
     }
 
     static async getByDirectorEmail(email) {

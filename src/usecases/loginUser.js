@@ -13,6 +13,10 @@ async function loginUser({
 
     if (!isValid) throw new Error("Password is invalid");
 
-    return dbUser;
+    // eslint-disable-next-line no-unused-vars
+    const { _password, ...user } = dbUser;
+
+    return user;
 }
+
 export default loginUser;

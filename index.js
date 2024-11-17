@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { UserRouter } from "./src/routes/UserRouter.js";
+import { UserRouter } from "./src/routes/user/UserRouter.js";
 import { ReportRouter } from "./src/routes/ReportRouter.js";
 import { SchoolRouter } from "./src/routes/SchoolRouter.js";
 

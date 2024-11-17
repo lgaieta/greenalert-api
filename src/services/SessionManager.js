@@ -4,7 +4,11 @@ import { SECRET_JWT_KEY } from "../config.js";
 class SessionManager {
     static async generateToken(payload) {
         return jwt.sign(
-            { email: payload.email, usertype: payload.usertype },
+            {
+                email: payload.email,
+                usertype: payload.usertype,
+                schoolCue: payload.schoolCue || null,
+            },
             SECRET_JWT_KEY,
             {
                 expiresIn: "7d",

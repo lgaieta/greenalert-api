@@ -11,20 +11,35 @@ const dbUsertypesMap = ["student", "professor", "director"];
 class MySQLUserRepository {
     static async listDirectors() {
         const result = await pool.query(
-            "SELECT email FROM user WHERE usertype = ?",
+            "SELECT * FROM user WHERE usertype = ?",
             [usertypesMap["director"]],
         );
 
-        return result[0];
+        return result[0].map(MySQLUserRepository.adaptUserWithoutPassword);
     }
 
     static async listProfessors() {
         const result = await pool.query(
-            "SELECT email FROM user WHERE usertype = ?",
+            "SELECT * FROM user WHERE usertype = ?",
             [usertypesMap["professor"]],
         );
 
-        return result[0];
+        return result[0].map(MySQLUserRepository.adaptUserWithoutPassword);
+    }
+
+    static async listProfessorsBySchoolCue(schoolCue) {
+        const [results] = await pool.query(
+            `
+                SELECT user.*
+                FROM user
+                JOIN teacher_school
+                    ON user.email = teacher_school.teacher_email
+                WHERE teacher_school.school_CUE = ?
+            `,
+            [schoolCue],
+        );
+
+        return results.map(MySQLUserRepository.adaptUserWithoutPassword);
     }
 
     static async getByEmail(email) {
@@ -70,6 +85,14 @@ class MySQLUserRepository {
 
         return result[0];
     }
+    static async assignProfessorToSchool(email, schoolCue) {
+        const result = await pool.query(
+            "INSERT INTO teacher_school (school_CUE, teacher_email) VALUES (?, ?)",
+            [schoolCue, email],
+        );
+
+        return result[0];
+    }
 
     static adaptUser(dbUser) {
         return {
@@ -78,13 +101,19 @@ class MySQLUserRepository {
         };
     }
 
+    static adaptUserWithoutPassword(dbUser) {
+        // eslint-disable-next-line no-unused-vars
+        const { _password, ...user } = MySQLUserRepository.adaptUser(dbUser);
+        return user;
+    }
+
     static async getDirectorByCue(cue) {
         const [result] = await pool.query(
             "SELECT user.* FROM school JOIN user ON school.CUE = ? WHERE usertype = ? AND user.email = school.director_email",
             [cue, usertypesMap["director"]],
         );
 
-        return result[0];
+        return MySQLUserRepository.adaptUserWithoutPassword(result[0]);
     }
 
     static async setSchoolDirector(cue, email) {

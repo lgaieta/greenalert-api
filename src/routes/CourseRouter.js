@@ -5,6 +5,8 @@ import MySQLCourseRepository from "../services/MySQLCourseRepository.js";
 const CourseRouter = express.Router();
 
 CourseRouter.get("/professor/:email", listProfessorCoursesHandler);
+CourseRouter.get("/student/:email", getStudentCourseHandler);
+CourseRouter.post("/join", joinCourseHandler);
 CourseRouter.post("/", createCourseHandler);
 
 async function listProfessorCoursesHandler(request, response) {
@@ -20,6 +22,26 @@ async function listProfessorCoursesHandler(request, response) {
         if (!email) return response.status(400).send("Error");
 
         const courses = await MySQLCourseRepository.listProfessorCourses(email);
+        return response.json(courses);
+    } catch (error) {
+        console.log(error);
+        return response.status(400).send("Error");
+    }
+}
+
+async function getStudentCourseHandler(request, response) {
+    try {
+        const { usertype } = await SessionManager.verifyToken(
+            request.cookies.access_token || "",
+        );
+        if (usertype !== "student")
+            return response.status(403).send("Unauthorized");
+
+        const { email } = request.params;
+
+        if (!email) return response.status(400).send("No email provided");
+
+        const courses = await MySQLCourseRepository.getStudentCourse(email);
         return response.json(courses);
     } catch (error) {
         console.log(error);
@@ -64,6 +86,32 @@ async function createCourseHandler(request, response) {
         });
 
         return response.json(course);
+    } catch (error) {
+        console.log(error);
+        return response.status(400).send("Error");
+    }
+}
+
+async function joinCourseHandler(request, response) {
+    try {
+        const { usertype } = await SessionManager.verifyToken(
+            request.cookies.access_token || "",
+        );
+        if (usertype !== "student")
+            return response.status(403).send("Unauthorized");
+
+        const { invitationCode, email } = request.body;
+        if (!invitationCode || !email)
+            return response.status(400).send("Error");
+
+        const result = await MySQLCourseRepository.joinStudent(
+            invitationCode,
+            email,
+        );
+
+        console.log(result);
+
+        return response.json(result);
     } catch (error) {
         console.log(error);
         return response.status(400).send("Error");

@@ -70,6 +70,14 @@ class MySQLCourseRepository {
         return result;
     }
 
+    static async leaveStudent(studentEmail) {
+        const [result] = await pool.query(
+            "UPDATE user SET course_id = NULL WHERE email = ?",
+            [studentEmail],
+        );
+        return result;
+    }
+
     static adaptCourse(course) {
         return {
             id: course.id,

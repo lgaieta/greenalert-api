@@ -7,6 +7,7 @@ const CourseRouter = express.Router();
 CourseRouter.get("/professor/:email", listProfessorCoursesHandler);
 CourseRouter.get("/student/:email", getStudentCourseHandler);
 CourseRouter.post("/join", joinCourseHandler);
+CourseRouter.post("/leave", leaveCourseHandler);
 CourseRouter.post("/", createCourseHandler);
 
 async function listProfessorCoursesHandler(request, response) {
@@ -109,7 +110,25 @@ async function joinCourseHandler(request, response) {
             email,
         );
 
-        console.log(result);
+        return response.json(result);
+    } catch (error) {
+        console.log(error);
+        return response.status(400).send("Error");
+    }
+}
+
+async function leaveCourseHandler(request, response) {
+    try {
+        const { usertype } = await SessionManager.verifyToken(
+            request.cookies.access_token || "",
+        );
+        if (usertype !== "student")
+            return response.status(403).send("Unauthorized");
+
+        const { email } = request.body;
+        if (!email) return response.status(400).send("Error");
+
+        const result = await MySQLCourseRepository.leaveStudent(email);
 
         return response.json(result);
     } catch (error) {

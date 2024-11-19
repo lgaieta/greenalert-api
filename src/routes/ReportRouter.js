@@ -36,9 +36,84 @@ ReportRouter.post("/", async (request, response) => {
     }
 });
 
+ReportRouter.post("/accept", async (request, response) => {
+    const { report } = request.body;
+
+    if (!report) return response.status(400).send("Missing report");
+
+    try {
+        const { usertype } = await SessionManager.verifyToken(
+            request.cookies.access_token || "",
+        );
+
+        if (usertype !== "professor")
+            return response.status(403).send("Unauthorized");
+
+        await MySQLReportRepository.accept(report);
+
+        return response.status(200).send("Accepted successfully!");
+    } catch (error) {
+        console.error(error);
+        return response.status(400).send("Error");
+    }
+});
+
+ReportRouter.post("/deny", async (request, response) => {
+    const { report } = request.body;
+
+    if (!report) return response.status(400).send("Missing report");
+
+    try {
+        const { usertype } = await SessionManager.verifyToken(
+            request.cookies.access_token || "",
+        );
+
+        if (usertype !== "professor")
+            return response.status(403).send("Unauthorized");
+
+        await MySQLReportRepository.deny(report);
+
+        return response.status(200).send("Denied successfully!");
+    } catch (error) {
+        console.error(error);
+        return response.status(400).send("Error");
+    }
+});
+
 ReportRouter.get("/", async (request, response) => {
     try {
         const reportList = await MySQLReportRepository.list();
+        return response.json(reportList);
+    } catch (error) {
+        console.log(error);
+        return response.status(400).send("Error");
+    }
+});
+
+ReportRouter.get("/accepted", async (request, response) => {
+    try {
+        const reportList = await MySQLReportRepository.listAccepted();
+        return response.json(reportList);
+    } catch (error) {
+        console.log(error);
+        return response.status(400).send("Error");
+    }
+});
+
+ReportRouter.get("/unseen/professor/:email", async (request, response) => {
+    try {
+        const { usertype } = await SessionManager.verifyToken(
+            request.cookies.access_token || "",
+        );
+        if (usertype !== "professor")
+            return response.status(403).send("Unauthorized");
+
+        const { email } = request.params;
+        if (!email) return response.status(400).send("No email provided");
+
+        const reportList =
+            await MySQLReportRepository.listUnseenProfessorReports(email);
+
         return response.json(reportList);
     } catch (error) {
         console.log(error);

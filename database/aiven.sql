@@ -208,6 +208,10 @@ ALTER TABLE school
 ADD CONSTRAINT director_school_fk
 FOREIGN KEY (director_email) REFERENCES user(email);
 
+
+ALTER TABLE report
+ADD COLUMN validated ENUM('unseen', 'accepted', 'denied') DEFAULT 'unseen';
+
 DROP TABLE IF EXISTS `teacher_school`;
 CREATE TABLE teacher_school (
     teacher_email VARCHAR(255),

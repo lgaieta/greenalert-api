@@ -17,6 +17,22 @@ class MySQLReportRepository {
         return result[0];
     }
 
+    static async accept(report) {
+        const result = await pool.query(
+            "UPDATE report SET validated = 'accepted' WHERE idreport = ?",
+            [report.id],
+        );
+        return result[0];
+    }
+
+    static async deny(report) {
+        const result = await pool.query(
+            "UPDATE report SET validated = 'denied' WHERE idreport = ?",
+            [report.id],
+        );
+        return result[0];
+    }
+
     static async list() {
         const [result] = await pool.query(
             `
@@ -28,20 +44,55 @@ class MySQLReportRepository {
             `,
         );
 
-        return result.map((row) => ({
-            id: row.idreport,
-            email: row.user_email,
-            type: row.type_report,
-            typeName: row.report_type_name,
-            courseId: row.course_id,
-            courseName: row.course_name,
-            schoolName: row.name_school,
-            locality: row.locality,
-            localityName: row.locality_name,
-            description: row.desc_report,
-            lat: row.latitude,
-            lng: row.length,
-        }));
+        return result.map(MySQLReportRepository.adaptReport);
+    }
+
+    static async listAccepted() {
+        const [result] = await pool.query(
+            `
+                SELECT report.*, course.course as course_name, locality.locality_name, report_type.name as report_type_name, school.name_school FROM report 
+                LEFT JOIN locality ON report.locality = locality.idlocality
+                LEFT JOIN report_type ON report.type_report = report_type.id
+                LEFT JOIN course ON report.course_id = course.id
+                LEFT JOIN school ON course.school_CUE = school.cue
+                WHERE report.validated = 'accepted';
+            `,
+        );
+
+        return result.map(MySQLReportRepository.adaptReport);
+    }
+
+    static async listUnseenProfessorReports(email) {
+        const [result] = await pool.query(
+            `
+                SELECT report.*, course.course as course_name, locality.locality_name, report_type.name as report_type_name, school.name_school FROM report 
+                LEFT JOIN locality ON report.locality = locality.idlocality
+                LEFT JOIN report_type ON report.type_report = report_type.id
+                LEFT JOIN course ON report.course_id = course.id AND course.teacher = ?
+                LEFT JOIN school ON course.school_CUE = school.cue
+                WHERE report.validated = 'unseen';
+            `,
+            [email],
+        );
+
+        return result.map(MySQLReportRepository.adaptReport);
+    }
+
+    static adaptReport(dbReport) {
+        return {
+            id: dbReport.idreport,
+            email: dbReport.user_email,
+            type: dbReport.type_report,
+            typeName: dbReport.report_type_name,
+            courseId: dbReport.course_id,
+            courseName: dbReport.course_name,
+            schoolName: dbReport.name_school,
+            locality: dbReport.locality,
+            localityName: dbReport.locality_name,
+            description: dbReport.desc_report,
+            lat: dbReport.latitude,
+            lng: dbReport.length,
+        };
     }
 }
 

@@ -90,6 +90,16 @@ ReportRouter.get("/", async (request, response) => {
     }
 });
 
+ReportRouter.get("/types", async (request, response) => {
+    try {
+        const reportList = await MySQLReportRepository.listTypes();
+        return response.json(reportList);
+    } catch (error) {
+        console.log(error);
+        return response.status(400).send("Error");
+    }
+});
+
 ReportRouter.get("/accepted", async (request, response) => {
     try {
         const reportList = await MySQLReportRepository.listAccepted();

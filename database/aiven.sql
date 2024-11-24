@@ -214,12 +214,15 @@ ADD COLUMN validated ENUM('unseen', 'accepted', 'denied') DEFAULT 'unseen';
 
 DROP TABLE IF EXISTS `teacher_school`;
 CREATE TABLE teacher_school (
-    teacher_email VARCHAR(255),
-    school_cue VARCHAR(15),
+    teacher_email VARCHAR(255) NOT NULL,
+    school_cue VARCHAR(15) NOT NULL,
     PRIMARY KEY (teacher_email, school_cue),
-    FOREIGN KEY (teacher_email) REFERENCES user(email) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (school_cue) REFERENCES school(CUE) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
+    KEY `fk_teacher_school_school1_idx` (school_cue),
+    KEY `fk_teacher_school_teacher1_idx` (teacher_email),
+    CONSTRAINT `teacher_school_teacher_email` FOREIGN KEY (teacher_email) REFERENCES user(email),
+    CONSTRAINT `teacher_school_school_cue` FOREIGN KEY (school_cue) REFERENCES school(CUE)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

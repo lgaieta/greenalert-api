@@ -47,6 +47,16 @@ class MySQLReportRepository {
         return result.map(MySQLReportRepository.adaptReport);
     }
 
+    static async listTypes() {
+        const [result] = await pool.query(
+            `
+                SELECT * FROM report_type;
+            `,
+        );
+
+        return result;
+    }
+
     static async listAccepted() {
         const [result] = await pool.query(
             `

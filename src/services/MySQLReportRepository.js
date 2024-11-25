@@ -57,6 +57,24 @@ class MySQLReportRepository {
         return result;
     }
 
+    static async listStatisticsByReportType() {
+        const [result] = await pool.query(
+            `
+            SELECT 
+                report_type.id,
+                report_type.name,
+                COUNT(*) AS amount
+            FROM
+                report
+                    LEFT JOIN
+                report_type ON report.type_report = report_type.id
+            GROUP BY report_type.id;
+            `,
+        );
+
+        return result;
+    }
+
     static async listAccepted() {
         const [result] = await pool.query(
             `

@@ -113,7 +113,9 @@ class MySQLUserRepository {
             [cue, usertypesMap["director"]],
         );
 
-        return MySQLUserRepository.adaptUserWithoutPassword(result[0]);
+        return result.length > 0
+            ? MySQLUserRepository.adaptUserWithoutPassword(result[0])
+            : null;
     }
 
     static async setSchoolDirector(cue, email) {
